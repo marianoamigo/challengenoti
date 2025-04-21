@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Usuario logueado</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          margin-top: 100px;
+        }
+
+        .back-button {
+          padding: 12px 24px;
+          font-size: 16px;
+          color: white;
+          background-color: #4CAF50;
+          border: none;
+          border-radius: 5px;
+          text-decoration: none;
+          cursor: pointer;
+        }
+
+        .logout-button:hover {
+          background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h1 th:text="${code}"></h1> //codigo del error
+<h2 th:text="${message == null ? 'Intenta nuevamente' : message"></h2>
+
+<a href="/" class="back-button">Volver a inicio</a>
+</body>
+</html>
