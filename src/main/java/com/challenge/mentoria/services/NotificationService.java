@@ -5,6 +5,7 @@ import com.challenge.mentoria.models.*;
 import com.challenge.mentoria.repositories.INotificationRepository;
 import com.challenge.mentoria.repositories.IUserRepository;
 import jakarta.transaction.Transactional;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,19 +91,20 @@ public class NotificationService {
         }
     }
 
-    public void consult(Integer iduser, Integer idnotif) {
+    public List<Notification> consult(Integer iduser) {
         List<Notification> notifications = notificationRepository.findByUsuario_Id(iduser);
 
         if (notifications.isEmpty()) {
             System.out.println("El usuario no tiene notificaciones");
+            return notifications;
         } else {
             for (Notification n : notifications) {
                 System.out.println("Titulo: " + n.getTitle());
                 System.out.println("Contenido: " + n.getContent());
                 System.out.println("Canal: " + n.getChannel());
                 System.out.println("----------");
-
             }
+            return notifications;
         }
 
     }

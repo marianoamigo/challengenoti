@@ -1,5 +1,6 @@
 package com.challenge.mentoria.controllers;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Enumeration;
 import java.util.Map;
@@ -60,7 +61,13 @@ public class ErrorsController implements ErrorController {
             String key = attributes.nextElement();
             System.out.println(key + ": " + httpRequest.getAttribute(key));
         }
-        return (Integer) httpRequest.getAttribute("javax.servlet.error.status_code");
+
+        Object statusCode = httpRequest.getAttribute("javax.servlet.error.status_code");
+        if (statusCode instanceof Integer) {
+            return (Integer) statusCode;
+        } else {
+            return 500; //esto es para evitar el error de null point exception
+        }
 
     }
 

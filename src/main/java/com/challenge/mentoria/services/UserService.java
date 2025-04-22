@@ -80,6 +80,7 @@ public class UserService implements UserDetailsService {
             GrantedAuthority p1 = new SimpleGrantedAuthority("ROLE_USER_REGISTERED"); //asigna el permiso de usuario registrado
 //            GrantedAuthority p2 = new SimpleGrantedAuthority();
 //            GrantedAuthority p3 = new SimpleGrantedAuthority();
+        permissions.add(p1);
 
         ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes(); //reupera los atributos del request http
         HttpSession session = attr.getRequest().getSession(true); //solicita los datos de sesion de esa solicitud http

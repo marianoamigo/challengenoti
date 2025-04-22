@@ -26,7 +26,7 @@ public class MainController {
         return "index";
     }
 
-    @PreAuthorize("hasAnyRole ('ROLE_USER_REGISTERED')") //solo un usuario autenticado puede acceder a la pagina /logged ya que ahi van los que ya loguearon
+    @PreAuthorize("hasRole('USER_REGISTERED')") //solo un usuario autenticado puede acceder a la pagina /logged ya que ahi van los que ya loguearon
     @GetMapping("/logged")
     public String logged(){
         return "logged";
