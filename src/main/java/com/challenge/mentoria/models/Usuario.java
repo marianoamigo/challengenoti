@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     @Column(unique = true)
     private String mail;
     private String pass;
@@ -20,7 +20,7 @@ public class Usuario {
         this.pass = pass;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 

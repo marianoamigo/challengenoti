@@ -31,15 +31,9 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void register(String mail, String pass, String pass2) throws ErrorService {
-//        Scanner scanner = new Scanner(System.in);
         validate(mail,pass, pass2);
-
         Usuario usuario = new Usuario();
-//        System.out.println("Ingrese el mail");
-//        String mail = scanner.nextLine();
         usuario.setMail(mail);
-//        System.out.println("Ingrese la pass");
-//        String pass = scanner.nextLine();
         String encript = new BCryptPasswordEncoder().encode(pass);
         usuario.setPass(encript);
 
@@ -53,15 +47,10 @@ public class UserService implements UserDetailsService {
         Optional<Usuario> respuesta = userRepository.findById(id);
         if (respuesta.isPresent()) {
             Usuario usuario = respuesta.get();
-//            System.out.println("Ingrese el nuevo mail");
-//            String mail = scanner.nextLine();
             usuario.setMail(mail);
-//            System.out.println("Ingrese la nueva pass");
-//            String pass = scanner.nextLine();
             String encript = new BCryptPasswordEncoder().encode(pass);
             usuario.setPass(encript);
             userRepository.save(usuario);
-
         } else {
             throw new ErrorService("No se encontró usuario solicitado");
         }
@@ -103,7 +92,7 @@ public class UserService implements UserDetailsService {
         }
     }
 
-    public Usuario findById1(int id) throws ErrorService {
+    public Usuario findUserById(Integer id) throws ErrorService {
         return userRepository.findById(id).orElseThrow(() ->
                 new ErrorService("No se encontró el usuario con ID: " + id)
         );

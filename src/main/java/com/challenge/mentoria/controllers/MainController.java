@@ -49,9 +49,6 @@ public class MainController {
     }
     @PostMapping("/registration")
     public String registration(ModelMap model ,@RequestParam(required = false) String mail, @RequestParam(required = false) String pass1, @RequestParam (required = false) String pass2) {
-//        System.out.println("Mail: "+mail);      para ver si el servidor recibe los parámetros por http
-//        System.out.println("Pass1: "+pass1);
-//        System.out.println("Pass2: "+pass2);
         try {
             userService.register(mail,pass1, pass2);
         } catch (ErrorService es) {

@@ -1,14 +1,15 @@
 package com.challenge.mentoria.services;
 
+import com.challenge.mentoria.enums.Chanel;
 import com.challenge.mentoria.errors.ErrorService;
 import com.challenge.mentoria.models.*;
 import com.challenge.mentoria.repositories.INotificationRepository;
 import com.challenge.mentoria.repositories.IUserRepository;
 import jakarta.transaction.Transactional;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,59 +21,35 @@ public class NotificationService {
     private INotificationRepository notificationRepository;
 
     @Transactional
-    public void createNotification(Integer idUser, String title, String content, String channel) throws ErrorService {
-
+    public void create(Integer idUser, String title, String content, Chanel channel) throws ErrorService {
+        Notification notification = new Notification();
         Usuario usuario = userRepository.findById(idUser).get();
         validate(title, content, channel);
-        Notification notification = new Notification();
-//        Scanner scanner = new Scanner(System.in);
-//        System.out.println("Ingrese titulo");
-//        String title = scanner.nextLine();
         notification.setTitle(title);
-//        System.out.println("Ingrese contenido");
-//        String content = scanner.nextLine();
         notification.setContent(content);
-//        System.out.println("Ingrese canal");
-//        String canal = scanner.nextLine();
-        switch (channel.toUpperCase()) {
-            case ("EMAIL"):
-                Email email = new Email();
-                email.send();
-                notification.setChannel(channel);
-                break;
-            case ("SMS"):
-                Sms sms = new Sms();
-                sms.send();
-                notification.setChannel(channel);
-                break;
-            case ("PUSH"):
-                Push push = new Push();
-                push.send();
-                notification.setChannel(channel);
-                break;
-            default:
-                throw new ErrorService("Mal elegido el canal");
-        }
+        notification.setNumSend(0);
+        notification.setChannel(channel); //por ahora no simulamos el envío
+        //send( idUser,  title,  content,  channel, notification);
+        notification.setUsuario(usuario);
         notificationRepository.save(notification);
     }
 
     @Transactional
-    public void modify(Integer iduser, Integer idnotif, String title, String content, String channel) throws ErrorService {
+    public void modify(Integer idUser, Integer idNotif, String title, String content, Chanel channel) throws ErrorService {
         validate(title,content,channel);
-
-//        Scanner scanner = new Scanner(System.in);
-        Optional<Notification> respuesta = notificationRepository.findById(idnotif);
+        Optional<Notification> respuesta = notificationRepository.findById(idNotif);
         if (respuesta.isPresent()) {
             Notification notification = respuesta.get();
-            if (notification.getUsuario().getId() == iduser){
+            if (notification.getUsuario().getId().equals(idUser)){
                 notification.setTitle(title);
                 notification.setContent(content);
+                notification.setChannel(channel);
                 notificationRepository.save(notification);
             } else {
                 throw new ErrorService("No tiene permisos para modificar la notificacion");
             }
         } else {
-            throw new ErrorService ("No se encontró la notificacion");
+            throw new ErrorService("No se encontró la notificación");
         }
     }
 
@@ -91,36 +68,53 @@ public class NotificationService {
         }
     }
 
-    public List<Notification> consult(Integer iduser) {
-        List<Notification> notifications = notificationRepository.findByUsuario_Id(iduser);
+    public List<Notification> consult(Integer idUser) {
+        return notificationRepository.findByUsuario_Id(idUser);
+    }
 
-        if (notifications.isEmpty()) {
-            System.out.println("El usuario no tiene notificaciones");
-            return notifications;
-        } else {
-            for (Notification n : notifications) {
-                System.out.println("Titulo: " + n.getTitle());
-                System.out.println("Contenido: " + n.getContent());
-                System.out.println("Canal: " + n.getChannel());
-                System.out.println("----------");
-            }
-            return notifications;
+    public void validate(String title, String content, Chanel channel) throws ErrorService{
+        if (title == null || title.isEmpty()) {
+            throw new ErrorService("El título no puede ser nulo");
+        }
+        if (content == null || content.isEmpty()) {
+            throw new ErrorService("El cuerpo de la notificacion no puede ser nulo");
+        }
+        if (channel == null) {
+            throw new ErrorService("El canal no puede ser nulo");
         }
 
     }
 
-    public void validate(String title, String content, String channel) throws ErrorService{
-        if (title == null || title.isEmpty() || title.length() > 45) {
-            throw new ErrorService("El título no puede ser nulo, ni mayor a 45 caracteres");
-        }
-        if (content == null || content.isEmpty() || content.length() > 255) {
-            throw new ErrorService("El cuerpo de la notificacion no puede ser nulo ni puede ser mayor a 255 caracteres");
-        }
-        if (channel == null || channel.isEmpty()) {
-            throw new ErrorService("Debe elegir un canal válido");
-        }
+    private void send(Integer idUser, String title, String content, Chanel channel, Notification notification) throws ErrorService{
+        switch (channel) {
+            case Chanel.EMAIL:
+                //validar formato
+                notification.setNumSend(notification.getNumSend()+1);
+                notification.setDateSend(new Date());
+                break;
 
+            case Chanel.SMS:
+                if (content.length() > 160) {
+                    throw new ErrorService("El cuerpo de la notificacion no puede ser  mayor a 160 caracteres");
+                }
+                notification.setNumSend(notification.getNumSend()+1);
+                notification.setDateSend(new Date());
+                break;
+
+            case Chanel.PUSH:
+                //validar token
+                //formatear payload
+                notification.setStateSend(true);
+                break;
+        }
     }
+
+    public Notification findNotificationById(Integer id) throws ErrorService {
+        return notificationRepository.findById(id).orElseThrow(() ->
+                new ErrorService("No se encontró la notificacion con ID: " + id)
+        );
+    }
+
 
 }
 

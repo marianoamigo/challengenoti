@@ -1,27 +1,60 @@
 package com.challenge.mentoria.models;
 
+import com.challenge.mentoria.enums.Chanel;
 import jakarta.persistence.*;
+
+import java.util.Date;
 
 @Entity
 @Table(name = "notification")
 public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
     private String title;
     private String content;
-    private String channel;
+    @Enumerated(EnumType.STRING)
+    private Chanel channel;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private Usuario usuario;
+    private int numSend;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date dateSend; //despues se setea con new Date
+    private boolean stateSend;
+
+    public int getNumSend() {
+        return numSend;
+    }
+
+    public void setNumSend(int numSend) {
+        this.numSend = numSend;
+    }
+
+    public Date getDateSend() {
+        return dateSend;
+    }
+
+    public void setDateSend(Date dateSend) {
+        this.dateSend = dateSend;
+    }
+
+    public boolean getStateSend() {
+        return stateSend;
+    }
+
+    public void setStateSend(boolean stateSend) {
+        this.stateSend = stateSend;
+    }
+
 
     public Notification(){}
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -41,11 +74,11 @@ public class Notification {
         this.content = content;
     }
 
-    public String getChannel() {
+    public com.challenge.mentoria.enums.Chanel getChannel() {
         return channel;
     }
 
-    public void setChannel(String channel) {
+    public void setChannel(Chanel channel) {
         this.channel = channel;
     }
 

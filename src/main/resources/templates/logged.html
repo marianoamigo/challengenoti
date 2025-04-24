@@ -29,7 +29,9 @@
 <body>
 <h1>Usuario logueado</h1>
 <h2 th:if="${session.usersession != null}" th:text="'Bienvenido ' + ${session.usersession.mail}"></h2>
-<a th:href="@{/user/edit-profile(id=__${session.usersession.id}__)}" class="logout-button">Modificar Perfil</a> <!-- ver href -->
-<a href="/logout" class="logout-button">Cerrar sesión</a>
+<h3><a th:href="@{/user/edit-profile(id=__${session.usersession.id}__)}" class="logout-button">Modificar Perfil</a></h3>
+<h3><a th:href="@{/notification/edit-profile}" class="logout-button">Agregar Notificación</a></h3>
+<h3><a th:href="@{/notification/my-notifications}" class="logout-button">Ver mis Notificaciones</a></h3>
+<h3><a href="/logout" class="logout-button">Cerrar sesión</a></h3>
 </body>
 </html>

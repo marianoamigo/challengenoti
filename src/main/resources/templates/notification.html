@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+    <style>
+        body {
+          font-family: Arial, sans-serif;
+          text-align: center;
+          margin-top: 100px;
+        }
+
+        form {
+          display: inline-block;
+          text-align: left;
+        }
+
+        input[type="email"],
+        input[type="password"] {
+          width: 100%;
+          padding: 10px;
+          margin: 6px 0 12px 0;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+        }
+
+        input[type="submit"] {
+          width: 100%;
+          padding: 10px;
+          background-color: #4CAF50;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+          background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+<h1><span th:text="${action}"></span> Notificacion</h1> <!--el parámetro action llega del Controller para definir lo que se muestra-->
+<form >
+    <p th:if="${error != null}" th:text="${error}" style="color:red"></p>
+
+    <input type="hidden" name="id" th:value="${profile.id}"/>
+    <p th:text="'Canal actual: ' + ${profile.channel}"></p>
+
+    <label>Titulo</label>
+    <input type="text" class="form-control" name="title" required th:disabled="${action == 'Delete'}" th:value="${profile.title}"/>
+    <label>Contenido</label>
+    <input type="text" class="form-control" name="content" required th:disabled="${action == 'Delete'}" th:value="${profile.content}"/>
+    <label>Canal</label>
+    <select type="channel" class="form-control" name="channel" required th:disabled="${action == 'Delete'}">
+        <option>Seleccione un canal</option>
+        <option th:each="ch : ${channels}"
+                th:value="${ch.name()}"
+                th:text="${ch}"
+                th:selected="${selectedChannel != null and ch == selectedChannel}">
+        </option>
+    </select>
+    <br><button th:if="${action == 'Create'}" type="submit" class="btn btn-primary"  formaction="/notification/edit-profile" formmethod="POST">Crear Notificacion</button>
+    <br><button th:if="${action == 'Modify'}" type="submit" class="btn btn-primary" formaction="/notification/edit-profile" formmethod="POST">Modificar Notificacion</button>
+    <br><button th:if="${action == 'Delete'}" type="submit" class="btn btn-danger" formaction="/notification/delete" formmethod="POST">Eliminar Notificacion</button>
+</form>
+<br><button th:href="@{/logged}">Volver</button>
+
+</body>
+</html>

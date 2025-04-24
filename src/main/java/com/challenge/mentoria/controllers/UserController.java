@@ -23,7 +23,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PreAuthorize("hasAnyRole ('ROLE_USER_REGISTERED')")
+    @PreAuthorize("hasRole ('USER_REGISTERED')")
     @GetMapping("/edit-profile")
     public String editProfile (HttpSession session, @RequestParam int id, ModelMap model) throws ErrorService{
             Usuario login = (Usuario) session.getAttribute("usersession");
@@ -31,7 +31,7 @@ public class UserController {
                 return "redirect:/logged";
             }
             try {
-                Usuario usuario = userService.findById1(id);
+                Usuario usuario = userService.findUserById(id);
                 model.addAttribute("profile", usuario);
             } catch (ErrorService e) {
                 model.addAttribute("error", e.getMessage());
@@ -48,7 +48,7 @@ public class UserController {
             if(login == null || login.getId() != id){
                 return "redirect:/logged";
             }
-            usuario = userService.findById1(id);
+            usuario = userService.findUserById(id);
             userService.modify(id, mail, pass1, pass2);
             session.setAttribute("usersession",usuario);
             return "redirect:/logged";

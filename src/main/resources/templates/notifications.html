@@ -48,7 +48,7 @@
     </style>
 </head>
 <body>
-<h1>Notificaciones</h1>
+<h1>Mis Notificaciones</h1>
 <div class="mail-subtitle" th:if="${userMail != null}">
     Usuario: <span th:text="${userMail}"></span>
 </div>
@@ -58,21 +58,26 @@
 <table th:if="${notifications != null and !notifications.isEmpty()}">
     <thead>
     <tr>
-        <th>ID</th>
         <th>Título</th>
         <th>Contenido</th>
         <th>Canal</th>
+        <th>Acciones</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="n : ${notifications}">
-        <td th:text="${n.id}"></td>
         <td th:text="${n.title}"></td>
         <td th:text="${n.content}"></td>
         <td th:text="${n.channel}"></td>
+        <td>
+            <a th:href="@{/notification/edit-profile(id=__${n.id}__,action=Modify)}">Editar</a> -
+            <a th:href="@{/notification/edit-profile(id=__${n.id}__,action=Delete)}">Eliminar</a>
+        </td>
     </tr>
     </tbody>
 </table>
+<a th:href="@{/notification/edit-profile}" class="logout-button">Agregar Notificación</a>
+<br><a th:href="@{/logged}">Volver</a>
 
 <p th:if="${notifications == null or notifications.isEmpty()}">No hay notificaciones para mostrar.</p>
 </body>
